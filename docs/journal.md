@@ -172,11 +172,33 @@ runtime.
   (processing delay, same as for 0.1.0). A background check confirmed a few minutes later that `latest` is
   0.2.0, with 8 files (CHANGELOG.md added).
 
+- Added this journal (`docs/journal.md`). It is not part of the npm package.
+
+## 8. Testing in another project and release 0.2.1
+
+The owner installed 0.2.0 from npm in another project. The suggested test config reported every function
+(`threshold: 100`, `max: 0`) and enabled the core `complexity` rule next to `cyclomatic-complexity` to compare
+the values. No calculation bug was found, but three small problems were reported:
+
+| Problem | Cause | Fix |
+| --- | --- | --- |
+| The README listed `ignoreTypeAnnotations` only for `maintainability-index`, but `halstead-volume` accepts it too | Options were documented inside the Maintainability Index section only | Added an Options section with a table of every option of every rule: type, default and allowed values |
+| `threshold: 101` made ESLint reject the config, and the README did not say why | The schema allows 0 to 100 (MI is never above 100), but the limit was not documented | Kept the limit and documented it. The README also says that `threshold: 100` does not report functions with MI 100, for example empty functions |
+| The message said "has 1 lines of code" | The message text always used the plural | The message uses a `{{lines}}` placeholder: "1 line", "4 lines". Added a test for one line |
+
+Also a mistake in this journal: these changes were first committed without a journal entry. This section was
+added afterwards.
+
+Release steps for 0.2.1: renamed the "Unreleased" changelog section to 0.2.1, ran `npm version patch` (tag
+`v0.2.1`), ran the 54 tests, built `dist/` (`meta.version` is 0.2.1), and pushed the commits and the tag.
+Publishing to npm is done by the owner because it needs the 2FA code.
+
 ## Current state
 
-- npm: `eslint-plugin-code-metrics` 0.2.0 is `latest`. 0.1.0 is still available and has the complexity bug.
-- GitHub: `main` with tags `v0.1.0` and `v0.2.0`, CI green.
-- 53 tests, plus smoke tests in CI.
+- npm: `latest` is 0.2.0. 0.1.0 is still available and has the complexity bug. 0.2.1 is ready but not
+  published yet.
+- GitHub: `main` with tags `v0.1.0`, `v0.2.0` and `v0.2.1`.
+- 54 tests, plus smoke tests in CI.
 
 ## Known limitations
 
@@ -195,3 +217,6 @@ runtime.
 - New tokens (GitHub fine-grained PAT) and new accounts (npm 2FA) often lack permissions. Check them before a
   release.
 - Keep version numbers in one place (`package.json`).
+- Test the published package in a real project. It finds problems that unit tests do not check, such as
+  documentation gaps and message wording.
+- Update the journal in the same commit as the change it describes.
