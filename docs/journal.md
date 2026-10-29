@@ -191,12 +191,12 @@ added afterwards.
 
 Release steps for 0.2.1: renamed the "Unreleased" changelog section to 0.2.1, ran `npm version patch` (tag
 `v0.2.1`), ran the 54 tests, built `dist/` (`meta.version` is 0.2.1), and pushed the commits and the tag.
-Publishing to npm is done by the owner because it needs the 2FA code.
+CI passed all 10 jobs. The owner published to npm (it needs the 2FA code), and a background check confirmed
+that `latest` is 0.2.1, with 8 files.
 
 ## Current state
 
-- npm: `latest` is 0.2.0. 0.1.0 is still available and has the complexity bug. 0.2.1 is ready but not
-  published yet.
+- npm: `latest` is 0.2.1. Older versions are still available; 0.1.0 has the complexity bug.
 - GitHub: `main` with tags `v0.1.0`, `v0.2.0` and `v0.2.1`.
 - 54 tests, plus smoke tests in CI.
 
