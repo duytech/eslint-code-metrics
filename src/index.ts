@@ -1,4 +1,5 @@
 import type { ESLint, Linter, Rule } from 'eslint';
+import { name, version } from '../package.json';
 import cyclomaticComplexity from './rules/cyclomatic-complexity.js';
 import halsteadVolume from './rules/halstead-volume.js';
 import linesOfCode from './rules/lines-of-code.js';
@@ -12,10 +13,7 @@ const rules: Record<string, Rule.RuleModule> = {
 };
 
 const plugin = {
-  meta: {
-    name: 'eslint-plugin-code-metrics',
-    version: '0.1.0',
-  },
+  meta: { name, version },
   rules,
   configs: {} as Record<'recommended' | 'strict', Linter.Config>,
 } satisfies ESLint.Plugin;
