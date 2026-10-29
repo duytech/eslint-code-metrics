@@ -101,3 +101,7 @@ npm run example
 
 `npm run example` lints the files in `examples/` with the built plugin and the `strict` config. It reports
 problems on purpose.
+
+## License
+
+[MIT](LICENSE) © Duy Pham

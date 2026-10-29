@@ -19,7 +19,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE"
   ],
   "keywords": [
     "eslint",
@@ -30,6 +31,7 @@
     "cyclomatic-complexity",
     "code-metrics"
   ],
+  "author": "Duy Pham <duy.pham146@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": ">=18.18.0"
