@@ -18,7 +18,7 @@ const rule: Rule.RuleModule = {
       {
         type: 'object',
         properties: {
-          max: { type: 'integer', minimum: 1 },
+          max: { type: 'integer', minimum: 0 },
         },
         additionalProperties: false,
       },

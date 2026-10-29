@@ -9,6 +9,8 @@ const BRANCH_TYPES = new Set([
   'WhileStatement',
   'DoWhileStatement',
   'CatchClause',
+  // Default values (`a = 1` in parameters and destructuring) only apply when the value is undefined.
+  'AssignmentPattern',
 ]);
 
 const LOGICAL_OPERATORS = new Set(['&&', '||', '??']);
@@ -23,12 +25,16 @@ function isDecisionPoint(node: AnyNode): boolean {
       return LOGICAL_OPERATORS.has(node.operator as string);
     case 'AssignmentExpression':
       return LOGICAL_ASSIGNMENT_OPERATORS.has(node.operator as string);
+    case 'MemberExpression':
+    case 'CallExpression':
+      // Optional chaining: `a?.b`, `a?.()`.
+      return node.optional === true;
     default:
       return BRANCH_TYPES.has(node.type);
   }
 }
 
-/** McCabe cyclomatic complexity: 1 + number of decision points. */
+/** McCabe cyclomatic complexity: 1 + number of decision points. Matches the core ESLint `complexity` rule. */
 export function computeCyclomaticComplexity(nodes: AnyNode[]): number {
   return 1 + nodes.filter(isDecisionPoint).length;
 }
