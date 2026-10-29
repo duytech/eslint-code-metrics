@@ -1,0 +1,57 @@
+{
+  "name": "eslint-plugin-code-metrics",
+  "version": "0.1.0",
+  "description": "ESLint rules for code metrics: Maintainability Index (Visual Studio formula), Halstead volume, cyclomatic complexity and lines of code.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "maintainability-index",
+    "halstead",
+    "cyclomatic-complexity",
+    "code-metrics"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "example": "eslint -c examples/eslint.config.js examples"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "dependencies": {
+    "@eslint-community/eslint-utils": "^4.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@typescript-eslint/parser": "^8.72.1",
+    "eslint": "^10.13.0",
+    "tsup": "^9.0.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

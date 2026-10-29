@@ -1,0 +1,62 @@
+import tsParser from '@typescript-eslint/parser';
+import { Linter, type Rule } from 'eslint';
+import { RuleTester } from 'eslint';
+import { describe, it } from 'vitest';
+import { computeFunctionMetrics, type FunctionMetrics, type MetricOptions } from '../src/metrics/index.js';
+
+RuleTester.describe = describe;
+RuleTester.it = it;
+RuleTester.itOnly = it.only;
+
+export { tsParser };
+
+export interface Measured extends FunctionMetrics {
+  name: string;
+}
+
+/** Runs the metric computation on every function in `code`, in exit order (inner functions first). */
+export function measure(code: string, options: MetricOptions & { typescript?: boolean } = {}): Measured[] {
+  const results: Measured[] = [];
+  const capture: Rule.RuleModule = {
+    create(context) {
+      const handle = (node: Rule.Node): void => {
+        const id = (node as { id?: { name: string } | null }).id;
+        results.push({
+          name: id?.name ?? '<anonymous>',
+          ...computeFunctionMetrics(node as never, context.sourceCode, options),
+        });
+      };
+      return {
+        'FunctionDeclaration:exit': handle,
+        'FunctionExpression:exit': handle,
+        'ArrowFunctionExpression:exit': handle,
+      };
+    },
+  };
+
+  const messages = new Linter().verify(
+    code,
+    [
+      {
+        files: ['**/*.ts'],
+        languageOptions: options.typescript ? { parser: tsParser } : {},
+        plugins: { test: { rules: { capture } } },
+        rules: { 'test/capture': 'error' },
+      },
+    ],
+    'input.ts',
+  );
+  const fatal = messages.find((message) => message.fatal);
+  if (fatal) throw new Error(fatal.message);
+  return results;
+}
+
+/** Generates a long function with many branches, far below the Maintainability Index threshold. */
+export function bigFunction(branches: number): string {
+  const lines = ['function big(x) {', '  let result = 0;'];
+  for (let i = 0; i < branches; i++) {
+    lines.push(`  if (x === ${i} && result < ${i * 3}) { result += x * ${i + 7} - helper${i}(x); }`);
+  }
+  lines.push('  return result;', '}');
+  return lines.join('\n');
+}
