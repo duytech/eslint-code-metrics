@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-code-metrics",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ESLint rules for code metrics: Maintainability Index (Visual Studio formula), Halstead volume, cyclomatic complexity and lines of code.",
   "type": "module",
   "main": "./dist/index.cjs",
