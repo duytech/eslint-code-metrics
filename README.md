@@ -3,12 +3,12 @@
 ESLint rules that measure code metrics per function for JavaScript and TypeScript, modeled on the
 [Visual Studio code metrics](https://learn.microsoft.com/en-us/visualstudio/code-quality/code-metrics-maintainability-index-range-and-meaning).
 
-| Rule | Default | Reports when |
-| --- | --- | --- |
-| `code-metrics/maintainability-index` | `threshold: 20` | Maintainability Index < threshold |
-| `code-metrics/halstead-volume` | `max: 1000` | Halstead volume > max |
-| `code-metrics/cyclomatic-complexity` | `max: 10` | cyclomatic complexity > max |
-| `code-metrics/lines-of-code` | `max: 60` | lines of code > max |
+| Rule | Reports when |
+| --- | --- |
+| `code-metrics/maintainability-index` | Maintainability Index < `threshold` |
+| `code-metrics/halstead-volume` | Halstead volume > `max` |
+| `code-metrics/cyclomatic-complexity` | cyclomatic complexity > `max` |
+| `code-metrics/lines-of-code` | lines of code > `max` |
 
 ## Install
 
@@ -48,6 +48,26 @@ export default [
 ];
 ```
 
+## Options
+
+| Rule | Option | Type | Default | Allowed values |
+| --- | --- | --- | --- | --- |
+| `maintainability-index` | `threshold` | number | `20` | 0 to 100 |
+| `maintainability-index` | `ignoreTypeAnnotations` | boolean | `true` | |
+| `halstead-volume` | `max` | number | `1000` | 0 or more |
+| `halstead-volume` | `ignoreTypeAnnotations` | boolean | `true` | |
+| `cyclomatic-complexity` | `max` | integer | `10` | 0 or more |
+| `lines-of-code` | `max` | integer | `60` | 0 or more |
+
+A value outside the allowed range (for example `threshold: 101`) makes ESLint reject the config.
+
+- `threshold`: the Maintainability Index is never above 100, so `threshold: 100` reports every function
+  except the ones with MI 100 (for example empty functions).
+- `ignoreTypeAnnotations`: skip TypeScript type syntax (`: T`, `<T>`, `as T`, `satisfies T`, local
+  `type`/`interface`) when counting Halstead operators and operands, so typed code is not penalized compared
+  to the same JavaScript. It changes the Halstead volume, so it affects both rules that use it.
+- `max: 0` reports every function, which is useful to see the value of each function.
+
 ## Maintainability Index
 
 Same formula as Visual Studio:
@@ -65,13 +85,6 @@ MI = MAX(0, (171 - 5.2 * ln(Halstead Volume) - 0.23 * Cyclomatic Complexity - 16
 The rule uses message `veryLow` for the red band and `low` otherwise. An ESLint rule has one severity,
 so to split the bands use the threshold: `['warn', { threshold: 20 }]` reports yellow and red,
 `['error', { threshold: 10 }]` reports only red.
-
-Options:
-
-- `threshold` (number, default `20`).
-- `ignoreTypeAnnotations` (boolean, default `true`): skip TypeScript type syntax (`: T`, `<T>`, `as T`,
-  `satisfies T`, local `type`/`interface`) when counting Halstead operators and operands, so typed code is
-  not penalized compared to the same JavaScript.
 
 ## How metrics are measured
 

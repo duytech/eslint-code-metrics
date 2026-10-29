@@ -54,7 +54,12 @@ ruleTester.run('lines-of-code', linesOfCode, {
     {
       code: 'function f() {\n  const a = 1;\n  return a;\n}',
       options: [{ max: 3 }],
-      errors: [{ messageId: 'tooMany', data: { name: "Function 'f'", loc: '4', max: '3' } }],
+      errors: [{ messageId: 'tooMany', data: { name: "Function 'f'", loc: '4', lines: 'lines', max: '3' } }],
+    },
+    {
+      code: 'const f = () => 1;',
+      options: [{ max: 0 }],
+      errors: [{ message: "Arrow function 'f' has 1 line of code. Maximum allowed is 0." }],
     },
   ],
 });

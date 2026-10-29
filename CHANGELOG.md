@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `lines-of-code` message uses the singular for one line ("has 1 line of code").
+- README documents the options of every rule, including `ignoreTypeAnnotations` on `halstead-volume` and the
+  allowed range of `threshold` (0 to 100).
+
 ## 0.2.0
 
 ### Changed

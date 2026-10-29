@@ -24,7 +24,7 @@ const rule: Rule.RuleModule = {
       },
     ],
     messages: {
-      tooMany: '{{name}} has {{loc}} lines of code. Maximum allowed is {{max}}.',
+      tooMany: '{{name}} has {{loc}} {{lines}} of code. Maximum allowed is {{max}}.',
     },
   },
   create(context) {
@@ -34,7 +34,11 @@ const rule: Rule.RuleModule = {
       const lines = metrics.linesOfCode;
       if (lines <= max) return;
 
-      context.report({ loc, messageId: 'tooMany', data: { name, loc: String(lines), max: String(max) } });
+      context.report({
+        loc,
+        messageId: 'tooMany',
+        data: { name, loc: String(lines), lines: lines === 1 ? 'line' : 'lines', max: String(max) },
+      });
     });
   },
 };
