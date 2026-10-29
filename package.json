@@ -31,6 +31,14 @@
     "cyclomatic-complexity",
     "code-metrics"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duytech/eslint-code-metrics.git"
+  },
+  "homepage": "https://github.com/duytech/eslint-code-metrics#readme",
+  "bugs": {
+    "url": "https://github.com/duytech/eslint-code-metrics/issues"
+  },
   "author": "Duy Pham <duy.pham146@gmail.com>",
   "license": "MIT",
   "engines": {
