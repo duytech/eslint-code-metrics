@@ -79,16 +79,22 @@ Each `function`, function expression, method and arrow function is measured sepa
 is not counted in the metrics of its parent.
 
 - **Cyclomatic complexity**: 1 + one per `if`, `?:`, `case` (not `default`), `for`, `for...in`, `for...of`,
-  `while`, `do...while`, `catch`, `&&`, `||`, `??`, `&&=`, `||=`, `??=`.
+  `while`, `do...while`, `catch`, `&&`, `||`, `??`, `&&=`, `||=`, `??=`, default value (`a = 1`) and optional
+  chaining (`a?.b`, `a?.()`). This is the same count as the core `complexity` rule.
 - **Halstead volume**: `N * log2(n)`, from the function tokens. Identifiers, literals, templates, `this` and
   `super` are operands. Keywords and punctuators are operators. Closing brackets are not counted, so a
   bracket pair counts once.
 - **Lines of code**: distinct lines with at least one code token. Blank lines and comment-only lines are
   not counted.
 
-Differences from core rules: `cyclomatic-complexity` is close to the core `complexity` rule but also counts
-logical assignment operators. `lines-of-code` differs from `max-lines-per-function` because it always
-skips blank lines, comments and nested functions.
+Code outside functions (top-level code, class field initializers, static blocks) is not measured.
+
+Differences from core rules: `cyclomatic-complexity` gives the same value as the core `complexity` rule for
+every function, but does not measure class field initializers. `lines-of-code` differs from
+`max-lines-per-function` because it always skips blank lines, comments and nested functions.
+
+The values are not identical to Visual Studio: the formula is the same, but Halstead volume and lines of code
+are measured on JavaScript tokens, not on C# syntax or IL.
 
 ## Development
 
@@ -101,6 +107,10 @@ npm run example
 
 `npm run example` lints the files in `examples/` with the built plugin and the `strict` config. It reports
 problems on purpose.
+
+`npm run test:smoke -- <eslint version>` (after `npm run build`) packs the package, installs it in a new
+project with that ESLint version, and lints the examples through an ESM and a CommonJS config. CI runs it with
+ESLint 9 and 10 on Node 18.18 to 24.
 
 ## License
 

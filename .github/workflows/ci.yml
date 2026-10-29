@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Upload build
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  # The dev toolchain needs Node 22+, so older Node versions only run the built package.
+  compat:
+    name: Smoke test (ESLint ${{ matrix.eslint }}, Node ${{ matrix.node }})
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { eslint: 9, node: 18.18 }
+          - { eslint: 9, node: 20 }
+          - { eslint: 9, node: 22 }
+          - { eslint: 10, node: 20.19 }
+          - { eslint: 10, node: 22 }
+          - { eslint: 10, node: 24 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - run: node scripts/smoke-test.mjs ${{ matrix.eslint }}
